@@ -36,13 +36,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [loading, setLoading] = useState<boolean>(true);
 
   // Load user from localStorage on first render
-  useEffect(() => {
-    const stored = getStoredUser();
-    if (stored) {
-      setUser(stored);
-    }
-    setLoading(false);
-  }, []);
+useEffect(() => {
+  const stored = getStoredUser();
+  if (stored) {
+    setUser(stored);
+  }
+  setLoading(false);
+}, []);
 
   async function handleLogin(email: string, password: string) {
     const loggedInUser = await apiLogin(email, password);
