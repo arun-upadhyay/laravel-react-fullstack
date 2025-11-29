@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -23,6 +24,8 @@ class AuthController extends Controller
             'email'    => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+
 
         // create API token
         $token = $user->createToken('api-token')->plainTextToken;
@@ -52,7 +55,14 @@ class AuthController extends Controller
         // optional: delete old tokens so one active token per user
         $user->tokens()->delete();
 
-        $token = $user->createToken('api-token')->plainTextToken;
+        $plainToken = $user->createToken('api-token')->plainTextToken;
+
+
+        [$id, $token] = explode('|', $plainToken, 2);
+
+        PersonalAccessToken::where('id', $id)->update([
+            'expires_at' => now()->addMinutes(60), // 60 minutes validity
+        ]);
 
         return response()->json([
             'user'  => $user,
@@ -74,6 +84,28 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Logged out',
+        ]);
+    }
+    public function refresh(Request $request)
+    {
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        $current = $user->currentAccessToken();
+        if ($current) {
+            $current->delete();
+        }
+
+        $plainTextToken = $user->createToken('api-token')->plainTextToken;
+
+        [$id, $token] = explode('|', $plainTextToken, 2);
+
+        PersonalAccessToken::where('id', $id)->update([
+            'expires_at' => now()->addMinutes(60),
+        ]);
+
+        return response()->json([
+            'token' => $token,
         ]);
     }
 }
