@@ -14,6 +14,7 @@ const Dashboard: React.FC = () => {
       } catch (err) {
         console.error(err);
         setMessage("Failed to load dashboard");
+        await logout();
       }
     }
     load();

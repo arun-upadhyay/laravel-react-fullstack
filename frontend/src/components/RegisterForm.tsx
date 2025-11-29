@@ -7,7 +7,7 @@ const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState<string>("Test User");
-  const [email, setEmail] = useState<string>("test2@example.com");
+  const [email, setEmail] = useState<string>("test@example.com");
   const [password, setPassword] = useState<string>("password");
   const [passwordConfirmation, setPasswordConfirmation] =
     useState<string>("password");

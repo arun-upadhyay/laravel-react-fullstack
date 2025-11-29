@@ -3,8 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Laravel\Sanctum\Http\Middleware\CheckAbilities;
-use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -16,15 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void
     {
 
-        // Enable SPA session-based authentication
-        // $middleware->statefulApi();
-        // $middleware->alias([
-        //     'abilities' => CheckAbilities::class,
-        //     'ability'   => CheckForAnyAbility::class,
-        // ]);
-        $middleware->alias([
-            'token.not_expired' => \App\Http\Middleware\EnsureTokenIsNotExpired::class,
-        ]);
+        // If you ever want SPA cookie-based Sanctum, you can uncomment this:
+        // $middleware->statefulApi()
     })
     ->withExceptions(function (Exceptions $exceptions): void
     {
