@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Events\Registered;
 
 class AuthController extends Controller
 {
@@ -14,8 +15,8 @@ class AuthController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = User::create([
@@ -24,16 +25,11 @@ class AuthController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-
-        // create API token
-
-        $plainToken = $user->createToken(
-            'api-token', ['*'], now()->addHour()
-        )->plainTextToken;
+        // 🔔 Fire Registered event (used by email verification)
+        event(new Registered($user));
 
         return response()->json([
-            'user' => $user,
-            'token' => $plainToken,
+            'message' => 'Registration successful. Please check your email to verify your account.',
         ], 201);
     }
 
@@ -54,6 +50,15 @@ class AuthController extends Controller
             ]);
         }
 
+        if (!$user->hasVerifiedEmail())
+        {
+            // Logout just in case auth()->attempt() started a session
+            auth()->logout();
+
+            return response()->json([
+                'message' => 'Email not verified. Please check your email for the verification link.',
+            ], 403);
+        }
         // optional: delete old tokens so one active token per user
         $user->tokens()->delete();
 
@@ -93,8 +98,6 @@ class AuthController extends Controller
         {
             $current->delete();
         }
-
-
         $plainToken = $user->createToken(
             'api-token', ['*'], now()->addHour()
         )->plainTextToken;

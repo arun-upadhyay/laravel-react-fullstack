@@ -33,8 +33,12 @@ services:
       DB_DATABASE: laravel
       DB_USERNAME: laravel
       DB_PASSWORD: secret
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: 1025
     depends_on:
       - db
+      - mailpit
   nginx:
     image: 'nginx:1.25'
     container_name: nginx
@@ -65,5 +69,12 @@ services:
       - dev
       - '--'
       - '--host'
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit
+    restart: unless-stopped
+    ports:
+      - "8025:8025"   # Web UI (open in browser)
+      - "1025:1025"   # SMTP server
 volumes:
   db_data: null
