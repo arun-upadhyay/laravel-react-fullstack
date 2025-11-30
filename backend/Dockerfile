@@ -1,4 +1,3 @@
-
 # backend/Dockerfile
 FROM php:8.2-fpm
 
@@ -14,7 +13,17 @@ RUN set -eux; \
         libxml2-dev \
         libzip-dev \
     ; \
-    docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd opcache; \
+    docker-php-ext-install \
+        pdo \
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        opcache \
+        sockets \
+    ; \
     rm -rf /var/lib/apt/lists/*
 
 # Install Composer

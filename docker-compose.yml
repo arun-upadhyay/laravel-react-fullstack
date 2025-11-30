@@ -39,6 +39,7 @@ services:
     depends_on:
       - db
       - mailpit
+      - rabbitmq
   nginx:
     image: 'nginx:1.25'
     container_name: nginx
@@ -76,5 +77,30 @@ services:
     ports:
       - "8025:8025"   # Web UI (open in browser)
       - "1025:1025"   # SMTP server
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672" # AMQP protocol
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  queue-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: queue-worker
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - './backend/src:/var/www/html'
+    depends_on:
+      - backend
+      - rabbitmq
+      - db
+    command: ["php", "artisan", "queue:work", "rabbitmq", "--verbose", "--tries=3", "--timeout=90"]
+
 volumes:
   db_data: null

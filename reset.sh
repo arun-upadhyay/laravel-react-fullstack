@@ -151,8 +151,7 @@ ORIG_CACHE_DRIVER=$(docker exec -i laravel-api bash -lc 'cd /var/www/html && gre
 # Force safe drivers (no DB dependency during bootstrap)
 run_be "cd /var/www/html && \
   sed -i 's/^CACHE_DRIVER=.*/CACHE_DRIVER=file/' .env && \
-  sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=file/' .env && \
-  sed -i 's/^QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env"
+  sed -i 's/^SESSION_DRIVER=.*/SESSION_DRIVER=file/' .env"
 
 # Generate APP_KEY (idempotent)
 run_be "cd /var/www/html && php artisan key:generate || true"
@@ -204,6 +203,10 @@ docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
 print_step "Verification URLs"
 echo "- Laravel:  http://localhost:8000"
 echo "- Frontend: http://localhost:5173"
+echo "- Mailpit:  http://localhost:8025"
+echo "- Rabbitmq: http://localhost:15672"
+
+
 echo "- API health (optional): http://localhost:8000/api/health"
 
 print_step "Done"
