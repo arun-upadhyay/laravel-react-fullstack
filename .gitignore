@@ -1,0 +1,80 @@
+# ============================
+# Global ignores
+# ============================
+.DS_Store
+Thumbs.db
+*.log
+*.env
+.env.*
+.env.local
+.env.development.local
+.env.production.local
+.env.test.local
+
+# Ignore IDE/editor config
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ============================
+# Docker
+# ============================
+# Local volumes and DB storage
+db_data/
+docker/*.pid
+
+# Docker build caches
+**/docker-cache/
+**/*.pid
+*.pid
+
+# ============================
+# Laravel (backend)
+# backend/src folder mapped to container path
+# ============================
+
+# Laravel & Composer
+backend/src/vendor/
+backend/src/composer.lock
+backend/src/storage/
+backend/src/bootstrap/cache/
+
+# Laravel logs & compiled files
+backend/src/storage/logs/
+backend/src/storage/framework/cache/*
+backend/src/storage/framework/views/*
+backend/src/storage/framework/sessions/*
+backend/src/storage/framework/testing/*
+
+# Laravel config cache
+backend/src/.env
+backend/src/.phpunit.result.cache
+
+# Node modules for backend (if using)
+backend/src/node_modules/
+
+# ============================
+# React + Vite (frontend)
+# ============================
+
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.DS_Store
+
+# Vite environment files
+frontend/.env
+frontend/.env.*
+frontend/.npmrc
+
+# ============================
+# OS / editor / misc
+# ============================
+*.tmp
+*.temp
+*.bak
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
