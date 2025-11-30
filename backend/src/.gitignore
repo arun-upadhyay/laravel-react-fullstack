@@ -1,27 +1,18 @@
+/vendor/
+/node_modules/
+/.env
 
-# OS / editor
-.DS_Store
+# Laravel specific ignored files
+/public/storage
+/storage/*.key
+/storage/logs/*.log
+/storage/*.cache
+/.phpunit.result.cache
+
+# IDE files
+/.idea
+/.vscode
+*.DS_Store
+
+# OS junk
 Thumbs.db
-.idea/
-.vscode/
-
-# Node (frontend)
-frontend/node_modules/
-frontend/dist/
-frontend/.env
-
-# PHP / Laravel (backend)
-backend/src/vendor/
-backend/src/storage/*.key
-backend/src/storage/*.log
-backend/src/storage/*.cache
-backend/src/storage/framework/cache/
-backend/src/storage/framework/sessions/
-backend/src/storage/framework/views/
-backend/src/storage/logs/
-backend/src/.env
-backend/src/.phpunit.result.cache
-
-# Docker
-**/.env.docker
-**/.docker
